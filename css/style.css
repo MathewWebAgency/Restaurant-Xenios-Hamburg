@@ -418,7 +418,10 @@ body.kopf-hell .kopf::before { opacity: 0; }
 
 .haus { padding: var(--r-7) var(--rand); }
 .haus__innen { max-width: var(--breite); margin: 0 auto; }
-.haus__text p { font-size: var(--s-1); max-width: 34ch; margin-top: var(--r-4); }
+.haus__text p {
+  font-size: var(--s-1); max-width: 42ch; margin-top: var(--r-4);
+  hyphens: none;
+}
 
 @media (min-width: 900px) {
   .haus__innen {
@@ -442,7 +445,10 @@ body.kopf-hell .kopf::before { opacity: 0; }
   border-block: 1px solid var(--linie);
 }
 .brot__kopf { max-width: var(--breite); margin: 0 auto var(--r-6); text-align: center; }
-.brot__lead { max-width: 52ch; margin-inline: auto; font-size: var(--s-1); }
+.brot__lead {
+  max-width: 56ch; margin-inline: auto; font-size: var(--s-1);
+  hyphens: none;
+}
 
 .dreier {
   max-width: var(--breite); margin: 0 auto; padding: 0;
@@ -513,8 +519,12 @@ body.kopf-hell .kopf::before { opacity: 0; }
 .keller__innen { max-width: var(--breite); margin: 0 auto; }
 .keller__zahl {
   font-size: var(--s-5); line-height: var(--lh-eng);
-  max-width: 18ch;
+  max-width: 14ch;
+  text-wrap: balance;
 }
+/* Ziffer und Wort gehoeren zusammen, sonst steht die 20 allein am
+   Zeilenende und Sorten Ouzo faengt neu an. */
+.keller__paar { white-space: nowrap; }
 .keller__ziffer { color: var(--messing-hell); font-variant-numeric: tabular-nums; }
 .keller__text {
   margin-top: var(--r-4); color: var(--kalk-weich);
@@ -526,6 +536,7 @@ body.kopf-hell .kopf::before { opacity: 0; }
    ========================================================================== */
 
 .tisch { padding: var(--r-7) var(--rand); }
+.tisch__text p { max-width: 44ch; hyphens: none; }
 .tisch__bild {
   display: block; width: 100%; height: auto;
   aspect-ratio: 16 / 10; object-fit: cover;
@@ -583,7 +594,10 @@ body.kopf-hell .kopf::before { opacity: 0; }
 @media (min-width: 900px) {
   .platz__innen { grid-template-columns: 1fr 1fr; align-items: center; }
 }
-.platz__text { color: var(--kalk-weich); max-width: 38ch; margin-top: var(--r-3); }
+.platz__text {
+  color: var(--kalk-weich); max-width: 44ch; margin-top: var(--r-3);
+  hyphens: none;
+}
 
 /* Das Gedeck. Die Teile sitzen, waehrend gehalten wird. */
 .gedeck { margin-top: var(--r-5); }
@@ -593,7 +607,7 @@ body.kopf-hell .kopf::before { opacity: 0; }
   display: block; margin-bottom: var(--r-4);
 }
 .g-teil {
-  opacity: 0;
+  opacity: .17;
   transform: translateY(14px);
   transition: opacity 300ms var(--ease-aus), transform 380ms var(--ease-aus);
 }
@@ -617,12 +631,17 @@ body.kopf-hell .kopf::before { opacity: 0; }
 .gedeck__hinweis { margin: var(--r-2) 0 0; color: var(--kalk-weich); }
 .gedeck[data-fertig] .gedeck__knopf { border-color: var(--messing-hell); }
 
-/* Die Reservierung geht erst an, wenn gedeckt ist. */
-.platz__rechts {
-  opacity: .38;
-  transition: opacity var(--t-ruhig) var(--ease-aus);
+/* Der Call to Action steht immer voll da. Wer anrufen will, soll anrufen,
+   ohne vorher etwas gedeckt zu haben. Verdient wird eine eigene Zeile,
+   nicht der Zugang zur Telefonnummer. */
+.verdient {
+  margin: 0 0 var(--r-3);
+  color: var(--messing-hell);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity var(--t-ruhig) var(--ease-aus),
+              transform var(--t-ruhig) var(--ease-aus);
 }
-.platz__rechts.an { opacity: 1; }
+.platz__rechts.an .verdient { opacity: 1; transform: none; }
 
 .ruf { margin-bottom: var(--r-5); }
 .ruf__vor { color: var(--messing-hell); margin: 0 0 var(--r-2); }

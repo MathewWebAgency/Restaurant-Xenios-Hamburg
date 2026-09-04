@@ -211,6 +211,10 @@
     document.addEventListener('xenios:loesen', gedeckLoesen);
   }
 
+  /* Zur Sicherheit: die Reservierungsspalte ist nie ausgegraut, auch wenn
+     jemand das Gedeck nie anfasst. Das Gedeck schaltet nur die verdiente
+     Zeile frei, nie den Weg zum Telefon. */
+
   /* ---------------------------------------------------------------------
      Das Formular. Es gibt kein Backend, also baut es eine mailto-Nachricht
      und oeffnet das Mailprogramm des Besuchers. Der Erfolgstext sagt genau
