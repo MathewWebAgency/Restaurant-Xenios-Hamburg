@@ -1,0 +1,17 @@
+# Rohmaterial und Review-Kopien gehoeren nie auf den Server
+roh/
+*.zip
+
+# Schluessel
+.env
+.env.*
+
+# Werkzeuge
+.impeccable/
+node_modules/
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes

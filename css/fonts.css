@@ -1,0 +1,82 @@
+/* Schriften lokal, pro Subset, mit unicode-range. Alle drei tragen Griechisch.
+   Kursive Schnitte sind entfernt: die Seite benutzt nirgends Kursive, und
+   ungenutzte Dateien im Auslieferungsstand sind totes Gewicht. */
+/* EB Garamond greek-ext */
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(../assets/fonts/ebgaramond-greek-ext.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+
+/* EB Garamond greek */
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(../assets/fonts/ebgaramond-greek.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+
+/* EB Garamond latin */
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(../assets/fonts/ebgaramond-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Literata greek-ext */
+@font-face {
+  font-family: 'Literata';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(../assets/fonts/literata-greek-ext.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+
+/* Literata greek */
+@font-face {
+  font-family: 'Literata';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(../assets/fonts/literata-greek.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+
+/* Literata latin */
+@font-face {
+  font-family: 'Literata';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(../assets/fonts/literata-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Commissioner greek */
+@font-face {
+  font-family: 'Commissioner';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url(../assets/fonts/commissioner-greek.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+
+/* Commissioner latin */
+@font-face {
+  font-family: 'Commissioner';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url(../assets/fonts/commissioner-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}

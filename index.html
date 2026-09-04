@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xenios · Griechisches Restaurant an der Osterstraße, Hamburg</title>
+<meta name="description" content="Griechische Küche an der Osterstraße in Hamburg Eimsbüttel. Seit 1981 dieselbe Familie, derselbe Raum. 87 griechische Weine, 20 Sorten Ouzo. Tisch reservieren unter 040 400383.">
+<meta name="theme-color" content="#141C26">
+<meta name="robots" content="noindex, nofollow">
+
+<!-- DEPLOY STEP: og:url und og:image brauchen die echte Adresse, erst beim Livegang setzen -->
+<meta property="og:type" content="restaurant">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Xenios · Griechisches Restaurant an der Osterstraße, Hamburg">
+<meta property="og:description" content="Der Gott, der Gäste beschützt. Nach ihm ist dieses Haus benannt. Seit 1981 an der Osterstraße.">
+<meta property="og:url" content="PLATZHALTER_URL">
+<meta property="og:image" content="PLATZHALTER_URL/assets/bilder/xenios-og.jpg">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23141C26'/%3E%3Cpath d='M8 8l16 16M24 8L8 24' stroke='%23C9A227' stroke-width='2.6' stroke-linecap='square'/%3E%3C/svg%3E">
+
+<link rel="preload" href="assets/fonts/ebgaramond-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/literata-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/style.css">
+
+<script src="js/vor-anstrich.js"></script>
+</head>
+<body>
+
+<a class="sprungmarke" href="#main">Zum Inhalt springen</a>
+
+<!-- Der Grund. Eine feste Ebene hinter allem, damit die Seite ein Ort ist
+     und keine gestapelten Kaesten. -->
+<div class="grund" aria-hidden="true"></div>
+
+<!-- Die Linie der Ankunft. Zeichnet sich beim Scrollen selbst, ein Knoten
+     je Sektion. Das ist die Wegstrecke von der Tuer bis an den Tisch. -->
+<svg class="weg" id="weg" viewBox="0 0 12 1000" preserveAspectRatio="none" aria-hidden="true">
+  <path id="weg-linie" d="M6 0 V1000" fill="none" stroke="currentColor" stroke-width="1.2"/>
+  <g id="weg-knoten" fill="currentColor">
+    <circle cx="6" cy="120" r="2.6"/><circle cx="6" cy="300" r="2.6"/>
+    <circle cx="6" cy="480" r="2.6"/><circle cx="6" cy="640" r="2.6"/>
+    <circle cx="6" cy="800" r="2.6"/><circle cx="6" cy="950" r="2.6"/>
+  </g>
+</svg>
+
+<nav class="kopf auf-nacht" aria-label="Hauptnavigation">
+  <a class="kopf__marke" href="#main">
+    <span class="kopf__name">Xenios</span>
+    <span class="kopf__gr label" lang="el">Ξένιος</span>
+  </a>
+  <ul class="kopf__liste">
+    <li><a href="#haus">Das Haus</a></li>
+    <li><a href="#karte">Karte</a></li>
+    <li><a href="#tisch">Der lange Tisch</a></li>
+    <li><a href="#zeiten">Zeiten</a></li>
+  </ul>
+  <a class="kopf__tel tel label" href="tel:+4940400383">040 400383</a>
+</nav>
+
+<main id="main" tabindex="-1">
+
+<!-- ======================================================================
+     DER HERO. Eine hohe angeheftete Strecke mit einer klebenden Buehne.
+     Der Scrollfortschritt 0 bis 1 treibt die Zeit im Film.
+     ====================================================================== -->
+<section class="hero auf-nacht" id="hero" aria-labelledby="hero-titel">
+  <h1 id="hero-titel" class="nur-fuer-screenreader">
+    Xenios, griechisches Restaurant an der Osterstraße 46 in Hamburg Eimsbüttel.
+    Benannt nach Zeus Xenios, dem Gott, der Gäste beschützt. Seit 1981 führt
+    dieselbe Familie dasselbe Haus.
+  </h1>
+
+  <div class="buehne" id="buehne">
+
+    <!-- Das Standbild gewinnt das Rennen um die Bandbreite mit Absicht.
+         Gesetzt wird es aus JavaScript, im selben Pfad, der auch ueber das
+         Video entscheidet, damit Handys keine der beiden Dateien holen. -->
+    <div class="poster" id="poster" aria-hidden="true"></div>
+
+    <video id="film" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
+
+    <!-- Der globale Scrim. Immer an, damit kein Bild je roh hinter der
+         Seite steht. -->
+    <div class="scrim" aria-hidden="true"></div>
+
+    <svg class="ring" id="ring" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/>
+    </svg>
+
+    <!-- Die Baender. Jedes besitzt einen Abschnitt des Scrollfortschritts.
+         Die Mittelbahn bleibt frei, dort geht die Kamera durch. -->
+    <div class="baender" id="baender" aria-hidden="true">
+
+      <div class="band band--links" data-a="0.00" data-b="0.14" data-auftritt="tiefe" data-ramp="0.030">
+        <p class="band__eyebrow label" lang="el">Ξένιος</p>
+        <p class="band__zeile">Der Gott, der Gäste beschützt.</p>
+      </div>
+
+      <div class="band band--rechts" data-a="0.17" data-b="0.34" data-auftritt="schaerfe">
+        <p class="band__zeile">Nach ihm ist dieses Haus benannt.</p>
+      </div>
+
+      <div class="band band--links" data-a="0.38" data-b="0.56" data-auftritt="raster" data-spread="0.42">
+        <p class="band__zeile">Seit 1981. Dieselbe Familie, derselbe Raum.</p>
+      </div>
+
+      <div class="band band--rechts" data-a="0.60" data-b="0.78" data-auftritt="schlag">
+        <p class="band__zeile"><span class="em">Erst das Brot.</span> Dann der Name.</p>
+        <p class="band__klein">So hält man es hier seit dreitausend Jahren.</p>
+      </div>
+
+      <div class="band band--settle" data-a="0.82" data-b="1.00" data-auftritt="ankunft">
+        <p class="band__zeile band__zeile--gross">Ihr Platz steht bereit.</p>
+        <p class="band__sub">Osterstraße 46, Eimsbüttel. Küche bis 22:30 Uhr.</p>
+        <p class="band__cta">
+          <a class="knopf knopf--hell" href="tel:+4940400383">Tisch reservieren: 040 400383</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Der Static-Hero. Ein entworfenes Layout fuer Handys und fuer
+         reduzierte Bewegung, keine Entschuldigung. -->
+    <div class="ruhehero" id="ruhehero">
+      <p class="ruhehero__eyebrow label" lang="el">Ξένιος</p>
+      <p class="ruhehero__titel">Der Gott, der Gäste beschützt.<br>Nach ihm ist dieses Haus benannt.</p>
+      <p class="ruhehero__sub">Griechische Küche an der Osterstraße, seit 1981 dieselbe Familie.</p>
+      <p><a class="knopf knopf--hell" href="tel:+4940400383">Tisch reservieren: 040 400383</a></p>
+    </div>
+
+    <div class="wink" id="wink" aria-hidden="true"><span></span></div>
+  </div>
+</section>
+
+
+<!-- ======================================================================
+     OSTERSTRASSE 46
+     ====================================================================== -->
+<section class="haus" id="haus" aria-labelledby="haus-titel">
+  <div class="haus__innen">
+    <p class="eyebrow label">Osterstraße 46</p>
+    <h2 id="haus-titel" class="gross">Ein Haus, eine Familie, ein Raum.</h2>
+    <div class="haus__text">
+      <p>1981 hat die Familie Efstathiou hier aufgemacht. Seitdem hat sich die Adresse
+      nicht geändert. Die gelben Steinwände sind dieselben, die Musik ist dieselbe, und
+      wer öfter kommt, wird beim Namen begrüßt. Im Viertel sagt niemand Xenios. Man
+      sagt, wir gehen zu Themi.</p>
+    </div>
+    <ul class="marken label" role="list">
+      <li>Seit 1981</li>
+      <li>Eine Adresse</li>
+      <li>Eine Familie</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ======================================================================
+     ERST DAS BROT. Drei gleichwertige Plaetze, keiner bleibt leer.
+     ====================================================================== -->
+<section class="brot" id="brot" aria-labelledby="brot-titel">
+  <div class="brot__kopf">
+    <p class="eyebrow label" lang="el">Φιλοξενία</p>
+    <h2 id="brot-titel" class="gross">Was kommt, bevor Sie etwas sagen.</h2>
+    <p class="brot__lead">Brot, Olivenöl, Oliven. Das steht auf dem Tisch, bevor die
+    Karte kommt. Nicht als Gruß aus der Küche, sondern weil es so gehört. Am Ende steht
+    ein Ouzo da, den niemand aufgeschrieben hat.</p>
+  </div>
+  <ol class="dreier" role="list">
+    <li class="dreier__teil">
+      <figure>
+        <img class="dreier__bild" src="assets/bilder/brot.jpg" width="1000" height="1242" loading="lazy" decoding="async"
+             alt="Ein Korb mit aufgerissenem warmem Brot auf weißer Tischdecke, dahinter die gelbe Steinwand des Gastraums.">
+        <figcaption><span class="label">Zuerst</span> Brot aus dem Ofen, warm, ohne dass jemand danach fragt.</figcaption>
+      </figure>
+    </li>
+    <li class="dreier__teil">
+      <figure>
+        <img class="dreier__bild" src="assets/bilder/oel.jpg" width="1000" height="1242" loading="lazy" decoding="async"
+             alt="Eine Schale schwarzer Oliven neben einer Karaffe mit grünem Olivenöl auf weißer Tischdecke.">
+        <figcaption><span class="label">Dazu</span> Olivenöl und Oliven, aus Griechenland, aus derselben Kiste wie in der Küche.</figcaption>
+      </figure>
+    </li>
+    <li class="dreier__teil">
+      <figure>
+        <img class="dreier__bild" src="assets/bilder/ouzo.jpg" width="1000" height="1242" loading="lazy" decoding="async"
+             alt="Ein Glas milchiger Ouzo neben einem Teller mit Honignachtisch, Krümel auf der Decke, der Abend ist vorbei.">
+        <figcaption><span class="label">Zum Schluss</span> Ouzo und etwas Süßes. Steht auf keiner Rechnung.</figcaption>
+      </figure>
+    </li>
+  </ol>
+</section>
+
+
+<!-- ======================================================================
+     DIE KARTE. Ein einziges, identisch wiederholtes Bauteil.
+     ====================================================================== -->
+<section class="karte" id="karte" aria-labelledby="karte-titel">
+  <div class="karte__kopf">
+    <h2 id="karte-titel" class="gross">Die Karte, mit Preisen.</h2>
+    <p class="karte__lead">Vollständig und aktuell. Mesedes zuerst, weil hier geteilt wird.</p>
+  </div>
+
+  <div class="karte__spalten">
+
+    <div class="gang">
+      <h3 class="gang__titel">Mesedes, kalt</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Tzatziki</span><span class="posten__preis label">6,90</span></li>
+        <li><span class="posten__name">Taramosalata</span><span class="posten__preis label">8,90</span></li>
+        <li><span class="posten__name">Melitzanosalata</span><span class="posten__preis label">8,90</span></li>
+        <li><span class="posten__name">Tirosalata Htipiti</span><span class="posten__preis label">8,90</span></li>
+        <li><span class="posten__name">Dolmadakia</span><span class="posten__preis label">7,90</span></li>
+        <li><span class="posten__name">Elies Kalamon</span><span class="posten__preis label">9,00</span></li>
+        <li><span class="posten__name">Feta Käse, natur</span><span class="posten__preis label">10,50</span></li>
+        <li><span class="posten__name">Kritika Dakos</span><span class="posten__preis label">10,90</span></li>
+        <li><span class="posten__name">Rote Bete Salat</span><span class="posten__preis label">10,90</span></li>
+        <li><span class="posten__name">Trilogia Elias</span><span class="posten__preis label">10,90</span></li>
+        <li><span class="posten__name">Htapodi Salata</span><span class="posten__preis label">12,90</span></li>
+      </ul>
+    </div>
+
+    <div class="gang">
+      <h3 class="gang__titel">Mesedes, warm</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Kolokythakia Tiganita</span><span class="posten__preis label">7,90</span></li>
+        <li><span class="posten__name">Kolokithokeftedes</span><span class="posten__preis label">8,90</span></li>
+        <li><span class="posten__name">Feta Sahanaki</span><span class="posten__preis label">8,90</span></li>
+        <li><span class="posten__name">Gebratene Auberginen</span><span class="posten__preis label">8,90</span></li>
+        <li><span class="posten__name">Manitaria Pané</span><span class="posten__preis label">8,90</span></li>
+        <li><span class="posten__name">Feta Sousami Meli</span><span class="posten__preis label">9,50</span></li>
+        <li><span class="posten__name">Keftedakia Tiganita</span><span class="posten__preis label">9,90</span></li>
+        <li><span class="posten__name">Kaserokroketes á la Ana</span><span class="posten__preis label">9,90</span></li>
+        <li><span class="posten__name">Halloumi Grillkäse</span><span class="posten__preis label">10,90</span></li>
+        <li><span class="posten__name">Gigantes</span><span class="posten__preis label">10,90</span></li>
+        <li><span class="posten__name">Spetzofai</span><span class="posten__preis label">10,90</span></li>
+        <li><span class="posten__name">Feta Psiti</span><span class="posten__preis label">11,90</span></li>
+        <li><span class="posten__name">Bekri Mese</span><span class="posten__preis label">11,90</span></li>
+        <li><span class="posten__name">Spanaki Fournou</span><span class="posten__preis label">13,90</span></li>
+        <li><span class="posten__name">Broccola Fournou</span><span class="posten__preis label">13,90</span></li>
+        <li><span class="posten__name">Melitzanes Fournou</span><span class="posten__preis label">13,90</span></li>
+        <li><span class="posten__name">Garides Sahanaki</span><span class="posten__preis label">14,90</span></li>
+        <li><span class="posten__name">Baby Calamares</span><span class="posten__preis label">14,90</span></li>
+        <li><span class="posten__name">Htapodi Psito</span><span class="posten__preis label">17,90</span></li>
+      </ul>
+    </div>
+
+    <div class="gang">
+      <h3 class="gang__titel">Salate</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Kleiner gemischter Beilagensalat</span><span class="posten__preis label">3,90</span></li>
+        <li><span class="posten__name">Kleiner griechischer Bauernsalat</span><span class="posten__preis label">5,00</span></li>
+        <li><span class="posten__name">Caesars Salat</span><span class="posten__preis label">11,50</span></li>
+        <li><span class="posten__name">Horiatiki</span><span class="posten__preis label">15,50</span></li>
+        <li><span class="posten__name">Manouri Salata</span><span class="posten__preis label">16,90</span></li>
+      </ul>
+
+      <h3 class="gang__titel">Suppe</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Tomatensuppe</span><span class="posten__preis label">7,90</span></li>
+      </ul>
+
+      <h3 class="gang__titel">Pasta und Spezielles</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Pasta Spanaki Skordo</span><span class="posten__preis label">16,90</span></li>
+        <li><span class="posten__name">Mousakas</span><span class="posten__preis label">20,90</span></li>
+      </ul>
+    </div>
+
+    <div class="gang">
+      <h3 class="gang__titel">Vom Schwein</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Giros Classique</span><span class="posten__preis label">17,90</span></li>
+        <li><span class="posten__name">Souvlaki</span><span class="posten__preis label">17,90</span></li>
+        <li><span class="posten__name">Giros Metaxa</span><span class="posten__preis label">18,90</span></li>
+        <li><span class="posten__name">Giros mit Fetakäsesauce</span><span class="posten__preis label">19,90</span></li>
+        <li><span class="posten__name">Giros me Manitaria</span><span class="posten__preis label">20,50</span></li>
+        <li><span class="posten__name">Bifteki Paradosiako</span><span class="posten__preis label">20,90</span></li>
+      </ul>
+
+      <h3 class="gang__titel">Vom Lamm</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Souvlakia Arnisia</span><span class="posten__preis label">26,50</span></li>
+        <li><span class="posten__name">Boutaki</span><span class="posten__preis label">26,90</span></li>
+        <li><span class="posten__name">Arnisia Paidakia</span><span class="posten__preis label">27,90</span></li>
+      </ul>
+
+      <h3 class="gang__titel">Vom Rind</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Rinderleber, Sikoti</span><span class="posten__preis label">18,90</span></li>
+        <li><span class="posten__name">Stifado</span><span class="posten__preis label">20,90</span></li>
+        <li><span class="posten__name">Juwetsi Horiatiko</span><span class="posten__preis label">27,90</span></li>
+      </ul>
+    </div>
+
+    <div class="gang">
+      <h3 class="gang__titel">Vom Geflügel</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Kotopoulo Fileto, gegrillt</span><span class="posten__preis label">19,90</span></li>
+        <li><span class="posten__name">Kotopoulo Fileto Metaxa</span><span class="posten__preis label">20,90</span></li>
+        <li><span class="posten__name">Fileto Galopoulas Exohiko</span><span class="posten__preis label">20,90</span></li>
+        <li><span class="posten__name">Galopoula Smirnoff</span><span class="posten__preis label">20,90</span></li>
+      </ul>
+
+      <h3 class="gang__titel">Aus dem Meer</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Solomos Mirodika</span><span class="posten__preis label">25,50</span></li>
+        <li><span class="posten__name">Dorade, Tsipoura</span><span class="posten__preis label">28,90</span></li>
+        <li><span class="posten__name">Garnelen Black Tiger, Aglio e Olio, 1 kg</span><span class="posten__preis label">52,00</span></li>
+      </ul>
+    </div>
+
+    <div class="gang">
+      <h3 class="gang__titel">Teller zum Teilen</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Hirino Piato</span><span class="posten__preis label">20,90</span></li>
+        <li><span class="posten__name">Mythos Piato</span><span class="posten__preis label">22,90</span></li>
+        <li><span class="posten__name">Xenios Teller</span><span class="posten__preis label">27,90</span></li>
+        <li><span class="posten__name">Arnisio Piato, 350 g</span><span class="posten__preis label">35,90</span></li>
+        <li><span class="posten__name">Filet Teller, 350 g</span><span class="posten__preis label">38,90</span></li>
+      </ul>
+
+      <h3 class="gang__titel">Nachtisch</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Loukoumades mit Früchten</span><span class="posten__preis label">5,50</span></li>
+        <li><span class="posten__name">Kormos Sokolatas</span><span class="posten__preis label">6,50</span></li>
+        <li><span class="posten__name">Tiramisu</span><span class="posten__preis label">8,00</span></li>
+        <li><span class="posten__name">Joghurt mit Honig</span><span class="posten__preis label">8,50</span></li>
+      </ul>
+    </div>
+
+    <div class="gang gang--beilagen">
+      <h3 class="gang__titel">Beilagen</h3>
+      <ul class="posten" role="list">
+        <li><span class="posten__name">Pitabrot</span><span class="posten__preis label">2,50</span></li>
+        <li><span class="posten__name">Kritharaki</span><span class="posten__preis label">5,50</span></li>
+        <li><span class="posten__name">Risi Bisi</span><span class="posten__preis label">5,50</span></li>
+        <li><span class="posten__name">Patatokroketes</span><span class="posten__preis label">5,50</span></li>
+        <li><span class="posten__name">Metaxasauce</span><span class="posten__preis label">6,00</span></li>
+        <li><span class="posten__name">Tiganites Patates</span><span class="posten__preis label">6,50</span></li>
+        <li><span class="posten__name">Frischer Broccoli</span><span class="posten__preis label">6,50</span></li>
+        <li><span class="posten__name">Gebratener frischer Spinat</span><span class="posten__preis label">6,90</span></li>
+        <li><span class="posten__name">Griechische Pommes, frisch frittiert</span><span class="posten__preis label">6,90</span></li>
+      </ul>
+    </div>
+
+  </div>
+  <p class="karte__fuss label">Alle Preise in Euro</p>
+</section>
+
+
+<!-- ======================================================================
+     DER KELLER. Eine Zahl, die fuer sich spricht.
+     ====================================================================== -->
+<section class="keller auf-nacht" id="keller" aria-labelledby="keller-titel">
+  <div class="keller__innen">
+    <h2 id="keller-titel" class="keller__zahl">
+      <span class="keller__ziffer" data-zaehler="87">87</span> Weine.
+      <span class="keller__ziffer" data-zaehler="20">20</span> Sorten Ouzo.
+    </h2>
+    <p class="keller__text">Alle aus Griechenland. Wer nicht weiß, was passt, sagt es,
+    dann kommt jemand an den Tisch und fragt, was Sie essen.</p>
+  </div>
+</section>
+
+
+<!-- ======================================================================
+     DER LANGE TISCH
+     ====================================================================== -->
+<section class="tisch" id="tisch" aria-labelledby="tisch-titel">
+  <div class="tisch__text">
+    <p class="eyebrow label">Feiern</p>
+    <h2 id="tisch-titel" class="gross">Wenn Sie mehr werden.</h2>
+    <p>Der Clubraum fasst dreißig Personen. Im Sommer sitzt man draußen, im Biergarten
+    unter den alten Bäumen oder auf der Terrasse unter den Schirmen. Sagen Sie einfach
+    am Telefon, wie viele Sie sind und was der Anlass ist.</p>
+    <ul class="marken label" role="list">
+      <li>Bis 30 Personen</li>
+      <li>Biergarten</li>
+      <li>Terrasse</li>
+    </ul>
+  </div>
+  <img class="tisch__bild" src="assets/bilder/clubraum.jpg" width="1920" height="1072" loading="lazy" decoding="async"
+       alt="Der lange Tisch im hinteren Raum, für eine große Runde eingedeckt, mit Kerzen und Mesedes unter dem Steinbogen.">
+</section>
+
+
+<!-- ======================================================================
+     DIE ZEITEN. Der heutige Tag ist markiert.
+     ====================================================================== -->
+<section class="zeiten" id="zeiten" aria-labelledby="zeiten-titel">
+  <div class="zeiten__innen">
+    <h2 id="zeiten-titel" class="gross">Wann die Küche an ist.</h2>
+    <table class="woche">
+      <caption class="nur-fuer-screenreader">Küchenzeiten von Montag bis Sonntag</caption>
+      <tbody>
+        <tr data-tag="1"><th scope="row">Montag</th><td class="label">16:30 bis 22:30</td></tr>
+        <tr data-tag="2"><th scope="row">Dienstag</th><td class="label">16:30 bis 22:30</td></tr>
+        <tr data-tag="3"><th scope="row">Mittwoch</th><td class="label">16:30 bis 22:30</td></tr>
+        <tr data-tag="4"><th scope="row">Donnerstag</th><td class="label">16:30 bis 22:30</td></tr>
+        <tr data-tag="5"><th scope="row">Freitag</th><td class="label">16:30 bis 22:30</td></tr>
+        <tr data-tag="6"><th scope="row">Samstag</th><td class="label">12:00 bis 22:30</td></tr>
+        <tr data-tag="0"><th scope="row">Sonntag</th><td class="label">12:00 bis 22:30</td></tr>
+      </tbody>
+    </table>
+    <p class="zeiten__hinweis">An Feiertagen ab 12:00 Uhr. An Wochenenden lohnt sich
+    der Anruf vorher.</p>
+  </div>
+</section>
+
+
+<!-- ======================================================================
+     IHR PLATZ. Der Mitmach-Moment und der eine Call to Action.
+     ====================================================================== -->
+<section class="platz auf-nacht" id="platz" aria-labelledby="platz-titel">
+  <div class="platz__innen">
+
+    <div class="platz__links">
+      <p class="eyebrow label">Der Platz, der frei bleibt</p>
+      <h2 id="platz-titel" class="gross">Es ist noch gedeckt.</h2>
+      <p class="platz__text">Im Gastrecht bleibt immer ein Gedeck für den frei, der
+      unangekündigt kommt. Decken Sie es ein.</p>
+
+      <div class="gedeck" id="gedeck">
+        <svg class="gedeck__zeichnung" viewBox="0 0 320 200" aria-hidden="true">
+          <ellipse class="g-teil" data-teil="1" cx="160" cy="112" rx="58" ry="52" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <ellipse class="g-teil" data-teil="1" cx="160" cy="112" rx="44" ry="39" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
+          <path class="g-teil" data-teil="2" d="M74 74v76M74 74c-5 0-8 5-8 12s3 12 8 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path class="g-teil" data-teil="3" d="M246 74v76M240 74v22a6 6 0 0012 0V74" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path class="g-teil" data-teil="4" d="M132 44h56l-6 22h-44z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+        <button class="gedeck__knopf knopf" id="gedeck-knopf" type="button" aria-describedby="gedeck-hinweis">
+          <span class="gedeck__fuellung" aria-hidden="true"></span>
+          <span class="gedeck__label">Gedrückt halten</span>
+        </button>
+        <p class="gedeck__hinweis label" id="gedeck-hinweis">Halten, bis der Platz gedeckt ist</p>
+      </div>
+    </div>
+
+    <div class="platz__rechts" id="reservieren">
+      <div class="ruf">
+        <p class="ruf__vor label">Der schnellste Weg an den Tisch</p>
+        <a class="ruf__nummer tel" href="tel:+4940400383">040 400383</a>
+        <p class="ruf__nach">Montag bis Sonntag, zu den Küchenzeiten.</p>
+      </div>
+
+      <form class="formular" id="formular" novalidate>
+        <p class="formular__vor">Lieber schreiben? Dann so.</p>
+        <div class="feld">
+          <label for="f-name">Ihr Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="feld feld--halb">
+          <div>
+            <label for="f-personen">Personen</label>
+            <input id="f-personen" name="personen" type="number" min="1" max="30" inputmode="numeric" required>
+          </div>
+          <div>
+            <label for="f-zeit">Wunschzeit</label>
+            <input id="f-zeit" name="zeit" type="text" placeholder="z. B. Samstag, 19 Uhr" required>
+          </div>
+        </div>
+        <div class="feld">
+          <label for="f-text">Noch etwas dazu</label>
+          <textarea id="f-text" name="text" rows="3"></textarea>
+        </div>
+        <button class="knopf knopf--hell" type="submit">Anfrage schicken</button>
+        <p class="formular__status" id="formular-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="fuss auf-nacht">
+  <div class="fuss__innen">
+    <div class="fuss__block">
+      <p class="fuss__marke">Xenios <span lang="el">Ξένιος</span></p>
+      <address>
+        Osterstraße 46<br>
+        20259 Hamburg Eimsbüttel<br>
+        <a href="tel:+4940400383">040 400383</a><br>
+        <a href="mailto:info@bei-themi.de">info@bei-themi.de</a>
+      </address>
+    </div>
+    <div class="fuss__block">
+      <p class="label">Küche</p>
+      <p>Montag bis Freitag ab 16:30 Uhr<br>
+      Samstag, Sonntag und feiertags ab 12:00 Uhr<br>
+      jeweils bis 22:30 Uhr</p>
+    </div>
+    <div class="fuss__block">
+      <p class="label">Kanäle</p>
+      <ul role="list" class="fuss__liste">
+        <li><a href="https://www.instagram.com/xenios_hamburg" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/RestaurantXenios" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.tripadvisor.com/Restaurant_Review-g187331-d783996" rel="noopener">Tripadvisor</a></li>
+      </ul>
+    </div>
+    <div class="fuss__block">
+      <p class="label">Rechtliches</p>
+      <ul role="list" class="fuss__liste">
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="kolophon">Das Bildmaterial dieser Seite ist erzeugt und steht bis zum
+  Fototermin. Näheres im Impressum unter Bildnachweis.</p>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Xenios",
+  "alternateName": "Xenios bei Themi",
+  "servesCuisine": "Griechisch",
+  "telephone": "+49 40 400383",
+  "email": "info@bei-themi.de",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Osterstraße 46",
+    "postalCode": "20259",
+    "addressLocality": "Hamburg",
+    "addressRegion": "Hamburg",
+    "addressCountry": "DE"
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "16:30", "closes": "22:30" },
+    { "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Saturday","Sunday"],
+      "opens": "12:00", "closes": "22:30" }
+  ],
+  "acceptsReservations": "True",
+  "sameAs": [
+    "https://www.instagram.com/xenios_hamburg",
+    "https://www.facebook.com/RestaurantXenios"
+  ]
+}
+</script>
+
+<script src="js/hero.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

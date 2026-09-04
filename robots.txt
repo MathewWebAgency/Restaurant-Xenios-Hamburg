@@ -1,0 +1,6 @@
+# Solange erzeugtes Bildmaterial statt echter Fotos auf der Seite steht und
+# die Adresse nicht final ist, bleibt die Seite aus der Suche heraus.
+# Beim echten Livegang wird das hier auf Allow umgestellt und das
+# noindex aus allen HTML-Dateien entfernt.
+User-agent: *
+Disallow: /
