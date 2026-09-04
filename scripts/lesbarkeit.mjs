@@ -45,6 +45,11 @@ async function hellsterPixel(bild, kasten) {
 
 const c = await verbinden();
 await mkdir(AUS, { recursive: true });
+// Ohne das misst der Pruefer irgendwann einen alten Stand aus dem Cache und
+// meldet unveraenderte Werte, obwohl das Stylesheet laengst anders ist.
+await c.senden('Network.enable');
+await c.senden('Network.setCacheDisabled', { cacheDisabled: true });
+await c.senden('Network.clearBrowserCache');
 await c.groesse(1440, 900, false);
 await c.gehe('http://127.0.0.1:4331/');
 

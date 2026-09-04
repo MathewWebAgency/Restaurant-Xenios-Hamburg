@@ -15,7 +15,9 @@ Gleiche Dateinamen, gleiche Seitenverhältnisse, fertig. Am Layout ändert sich 
 |---|---|---|---|
 | `assets/video/hero-scrub.mp4` | 16:9 | 1600 breit, 8,1 MB | die Kamerafahrt von der Straße an den Tisch |
 | `assets/video/hero-poster.jpg` | 16:9 | erstes Bild der Fahrt | die Straße mit der offenen Tür |
-| `assets/video/hero-hoch.jpg` | hoch, 1000×1452 | 130 KB | der Static-Hero fürs Handy, aus dem ersten Bild geschnitten |
+| `assets/video/hero-scrub-hoch.mp4` | hoch, 540×960 | 2,6 MB | dieselbe Fahrt fürs Handy, eigener Ausschnitt |
+| `assets/video/hero-hoch-poster.jpg` | hoch, 540×960 | 70 KB | Standbild dazu |
+| `assets/video/hero-hoch.jpg` | hoch, 1000×1780 | 131 KB | Hintergrund des Static-Hero bei reduzierter Bewegung |
 | `assets/bilder/brot.jpg` | 4:5 | 1000 breit | Brotkorb auf weißer Decke |
 | `assets/bilder/oel.jpg` | 4:5 | 1000 breit | Oliven und Olivenöl |
 | `assets/bilder/ouzo.jpg` | 4:5 | 1000 breit | Ouzo und Nachtisch am Ende des Abends |
@@ -74,7 +76,24 @@ Versuch gibt die Drehung vor.
 
 ## Die Verarbeitung
 
-Kostet keine Credits, läuft mit ffmpeg.
+Kostet keine Credits, läuft mit ffmpeg. Beide Fassungen entstehen in je einem
+Durchgang aus denselben HD-Quellen, damit keine Generationsverluste entstehen und die
+Wärmekorrektur in beiden identisch sitzt.
+
+**Die Wärmekorrektur am Anfang.** Der Einstieg war zu kalt gemessen, Rot lag am
+ersten Bild sieben Punkte unter Blau. Korrigiert wird zeitabhängig über `geq`, die
+Korrektur läuft über 2,6 Sekunden auf null aus:
+
+```
+geq=r='clip(r(X,Y)*(1+0.14*max(0,(2.6-T)/2.6))+7*max(0,(2.6-T)/2.6),0,255)'
+   :g='clip(g(X,Y)*(1+0.05*max(0,(2.6-T)/2.6))+3*max(0,(2.6-T)/2.6),0,255)'
+   :b='clip(b(X,Y)*(1-0.09*max(0,(2.6-T)/2.6)),0,255)'
+```
+
+**Der Ausschnitt fürs Hochformat.** `crop=608:1080:744:0` aus der 1920er Quelle, dann
+auf 540×960. Die Position 744 ist gewählt, nicht geraten: Bei 547 stand die Tür am
+Anfang zu weit rechts, bei 680 verlor der Schluss den Brotkorb. Der Wert dazwischen
+hält beides im Bild.
 
 ```bash
 # Die zwei Rohsegmente in EINEM Durchgang zusammenfuegen und genau einmal

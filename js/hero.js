@@ -9,9 +9,18 @@
 (function () {
   'use strict';
 
-  var VIDEO_URL   = 'assets/video/hero-scrub.mp4';
-  var POSTER_URL  = 'assets/video/hero-poster.jpg';
-  var VIDEO_BYTES = 8540258;   // echte Dateigroesse, Rueckfall wenn Content-Length fehlt
+  /* Zwei Fassungen der Fahrt. Quer fuer den Schirm, hoch fuers Handy.
+     Das Handy bekam frueher gar keine Bewegung, weil es unter den
+     Static-Hero fiel. Jetzt bekommt es dieselbe Reise, nur als eigene,
+     schmalere und deutlich leichtere Datei. */
+  var HOCH_QUERY  = '(orientation: portrait) and (max-width: 1024px)';
+  var istHoch     = window.matchMedia(HOCH_QUERY).matches;
+
+  var VIDEO_URL   = istHoch ? 'assets/video/hero-scrub-hoch.mp4'
+                            : 'assets/video/hero-scrub.mp4';
+  var POSTER_URL  = istHoch ? 'assets/video/hero-hoch-poster.jpg'
+                            : 'assets/video/hero-poster.jpg';
+  var VIDEO_BYTES = istHoch ? 2777263 : 8563669;   // echte Groessen, Rueckfall wenn Content-Length fehlt
 
   var hero    = document.getElementById('hero');
   var buehne  = document.getElementById('buehne');
@@ -24,16 +33,16 @@
   if (!hero || !film) return;
 
   /* ---------------------------------------------------------------------
-     Die fuenf Bedingungen fuer den Static-Hero.
+     Die Bedingungen fuer den Static-Hero, also fuer gar kein Video.
+     Nur zwei: wer keine Bewegung will, und ein quer gehaltenes Handy, auf
+     dem fuer eine Reise kein Platz ist. Alles andere bekommt die Fahrt,
+     im Quer- oder im Hochformat.
      Sie stehen zeichengenau genauso im Stylesheet. Weicht eine ab, laedt
      die eine Seite Dateien, die die andere versteckt.
      --------------------------------------------------------------------- */
   var GATES = [
-    '(max-width: 720px)',
-    '(orientation: portrait) and (max-width: 1024px)',
-    '(orientation: portrait) and (pointer: coarse)',
-    '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)',
-    '(prefers-reduced-motion: reduce)'
+    '(prefers-reduced-motion: reduce)',
+    '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)'
   ];
   var MQLS = GATES.map(function (q) { return window.matchMedia(q); });
 
@@ -119,10 +128,21 @@
       a: parseFloat(b.getAttribute('data-a')),
       b: parseFloat(b.getAttribute('data-b')),
       ramp: b.hasAttribute('data-ramp') ? parseFloat(b.getAttribute('data-ramp')) : null,
+      // Welche Scrim-Ebene zu diesem Band gehoert.
+      seite: b.classList.contains('band--settle') ? 'settle'
+           : b.classList.contains('band--rechts') ? 'rechts' : 'links',
       op: -1,
       k: -1
     };
   });
+
+  // Die drei Scrim-Ebenen. Jede folgt dem staerksten Band ihrer Seite.
+  var scrims = {
+    links:  document.getElementById('scrim-links'),
+    rechts: document.getElementById('scrim-rechts'),
+    settle: document.getElementById('scrim-settle')
+  };
+  var scrimStand = { links: -1, rechts: -1, settle: -1 };
 
   function smoothstep(p, e0, e1) {
     var t = Math.min(1, Math.max(0, (p - e0) / (e1 - e0)));
@@ -156,6 +176,20 @@
       if (Math.abs(k - bi.k) > 0.008) {
         bi.k = k;
         bi.el.style.setProperty('--k', k.toFixed(3));
+      }
+    }
+
+    // Jede Scrim-Ebene nimmt das staerkste Band ihrer Seite. Geschrieben
+    // wird auch hier nur bei echter Aenderung.
+    var stand = { links: 0, rechts: 0, settle: 0 };
+    for (var j = 0; j < bandInfo.length; j++) {
+      var s = bandInfo[j];
+      if (s.op > stand[s.seite]) stand[s.seite] = s.op;
+    }
+    for (var seite in stand) {
+      if (Math.abs(stand[seite] - scrimStand[seite]) > 0.004 && scrims[seite]) {
+        scrimStand[seite] = stand[seite];
+        scrims[seite].style.opacity = stand[seite].toFixed(3);
       }
     }
   }
@@ -323,6 +357,7 @@
     window.addEventListener('scroll', beiScroll, { passive: true });
     window.addEventListener('resize', beiScroll, { passive: true });
     bandInfo.forEach(function (bi) { bi.op = -1; bi.k = -1; });   // Zwischenspeicher leeren
+    scrimStand.links = scrimStand.rechts = scrimStand.settle = -1;
     festsetzenLoesen();
     ziel = fortschritt();
     baenderSetzen(ziel);
@@ -343,6 +378,26 @@
     if (m.addEventListener) m.addEventListener('change', heroModus);
     else m.addListener(heroModus);
   });
+
+  /* Dreht jemand das Geraet, passt die geladene Fassung nicht mehr zum
+     Format. Wir tauschen sie dann still aus, statt eine Querformat-Fahrt
+     hochkant zu beschneiden. Erst ab einer echten Aenderung, und nur wenn
+     die Fahrt ueberhaupt laeuft. */
+  var hochMQ = window.matchMedia(HOCH_QUERY);
+  function formatWechsel() {
+    if (hochMQ.matches === istHoch) return;
+    istHoch = hochMQ.matches;
+    VIDEO_URL  = istHoch ? 'assets/video/hero-scrub-hoch.mp4' : 'assets/video/hero-scrub.mp4';
+    POSTER_URL = istHoch ? 'assets/video/hero-hoch-poster.jpg' : 'assets/video/hero-poster.jpg';
+    VIDEO_BYTES = istHoch ? 2777263 : 8563669;
+    if (!scrubAn) return;
+    gestartet = false;
+    buehne.classList.remove('film-bereit', 'film-aus');
+    film.removeAttribute('src');
+    heroEinmalStarten();
+  }
+  if (hochMQ.addEventListener) hochMQ.addEventListener('change', formatWechsel);
+  else hochMQ.addListener(formatWechsel);
 
   /* Reduzierte Bewegung wird in BEIDE Richtungen befolgt. Beim Einschalten
      werden alle scrollgetriebenen Elemente auf ihren Endzustand gesetzt und

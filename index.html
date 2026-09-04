@@ -85,6 +85,15 @@
          Seite steht. -->
     <div class="scrim" aria-hidden="true"></div>
 
+    <!-- Die Scrims der Baender. Sie liegen als eigene Ebenen auf der Buehne
+         und laufen vom Bildrand nach innen aus. Frueher hingen sie als
+         Ellipse am Textkasten, und eine begrenzte Ellipse hat immer eine
+         Kante: Das las sich als dunkler Kasten hinter der Schrift. Was am
+         Rand beginnt, hat keine sichtbare Kante. -->
+    <div class="bandscrim bandscrim--links" id="scrim-links" aria-hidden="true"></div>
+    <div class="bandscrim bandscrim--rechts" id="scrim-rechts" aria-hidden="true"></div>
+    <div class="bandscrim bandscrim--settle" id="scrim-settle" aria-hidden="true"></div>
+
     <svg class="ring" id="ring" viewBox="0 0 48 48" aria-hidden="true">
       <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/>
@@ -116,7 +125,10 @@
         <p class="band__zeile band__zeile--gross">Ihr Platz steht bereit.</p>
         <p class="band__sub">Osterstraße 46, Eimsbüttel. Küche bis 22:30 Uhr.</p>
         <p class="band__cta">
-          <a class="knopf knopf--hell" href="tel:+4940400383">Tisch reservieren: 040 400383</a>
+          <a class="rufcta" href="tel:+4940400383">
+            <span class="rufcta__label label">Tisch reservieren</span>
+            <span class="rufcta__nummer">040 400383</span>
+          </a>
         </p>
       </div>
     </div>
@@ -127,7 +139,12 @@
       <p class="ruhehero__eyebrow label" lang="el">Ξένιος</p>
       <p class="ruhehero__titel">Der Gott, der Gäste beschützt.<br>Nach ihm ist dieses Haus benannt.</p>
       <p class="ruhehero__sub">Griechische Küche an der Osterstraße, seit 1981 dieselbe Familie.</p>
-      <p><a class="knopf knopf--hell" href="tel:+4940400383">Tisch reservieren: 040 400383</a></p>
+      <p class="ruhehero__cta">
+        <a class="rufcta" href="tel:+4940400383">
+          <span class="rufcta__label label">Tisch reservieren</span>
+          <span class="rufcta__nummer">040 400383</span>
+        </a>
+      </p>
     </div>
 
     <div class="wink" id="wink" aria-hidden="true"><span></span></div>

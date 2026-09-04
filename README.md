@@ -81,12 +81,14 @@ mit Pause für den Halte-Moment.
 
 | | |
 |---|---|
-| Seite ohne Video | 509 KB aus 12 Dateien |
-| Video, strömt hinter dem Ladering nach | 8,14 MB |
-| DOM fertig | 76 ms |
+| Seite ohne Video, Desktop | 526 KB |
+| Seite ohne Video, Handy | 397 KB |
+| Video quer, strömt hinter dem Ladering nach | 8,17 MB |
+| Video hoch, fürs Handy | 2,65 MB |
+| DOM fertig | 54 ms |
 | Schriften, die eine deutsche Seite lädt | 187 KB Latein, 108 KB Griechisch dazu |
 | schwächster Textkontrast im Hero | 3,96:1 gegen den hellsten Pixel |
-| Selbsttest | 34 von 34 |
+| Selbsttest | 35 von 35 |
 
 ## Die Regeln, die man beim Ändern kennen muss
 
@@ -94,10 +96,17 @@ mit Pause für den Halte-Moment.
 direkt in der Seite läuft lokal und wird live blockiert. Das fällt erst nach dem
 Deploy auf, und dort nur in der Konsole.
 
-**Die fünf Static-Hero-Bedingungen stehen zeichengenau gleich in `style.css` und
-in `hero.js`.** Weicht eine ab, lädt die eine Seite Dateien, die die andere
-versteckt. Sie hängen an Change-Listenern, damit ein gedrehtes Tablet nicht in
-einem leeren Hero landet.
+**Es gibt drei Hero-Zustände, und ihre Bedingungen stehen zeichengenau gleich in
+`style.css` und in `hero.js`.** Weicht eine ab, lädt die eine Seite Dateien, die die
+andere versteckt.
+
+1. Quer und breit: die 8,2-MB-Fahrt, Text links und rechts der Mittelbahn.
+2. Hochkant bis 1024px: die 2,6-MB-Fahrt, Text unten über die ganze Breite.
+3. Reduzierte Bewegung oder quer gehaltenes Handy ohne Höhe: gar kein Video,
+   stattdessen der Static-Hero auf einem Standbild.
+
+Alles hängt an Change-Listenern. Dreht jemand das Gerät, wird die passende Fassung
+still getauscht, statt eine Querformat-Fahrt hochkant zu beschneiden.
 
 **Nur `transform` und `opacity` animieren.** Und nie eine dynamische Eigenschaft
 auf ein Element setzen, das gleichzeitig eine Auftrittsanimation mit `forwards`

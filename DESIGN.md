@@ -59,9 +59,21 @@ Versalien-Label `+0.12em`. Zeilenlänge in `ch` am Textelement selbst, nie am Co
 
 ## Der Hero
 
-- Höhe 1000vh, zwei Segmente zu je 8 Sekunden, insgesamt 16 Sekunden Material.
-- Video 1600 Pixel breit, crf 26, Keyframe alle 8 Bilder, 8,1 MB.
-- Fünf Bänder, jedes mit eigenem Auftritt, der echot, was der Film gerade tut.
+Zwei Fassungen derselben Reise, je nach Format.
+
+| | quer | hoch |
+|---|---|---|
+| Datei | `hero-scrub.mp4` | `hero-scrub-hoch.mp4` |
+| Größe | 1600×900, crf 26, 8,2 MB | 540×960, crf 28, 2,6 MB |
+| Scrollstrecke | 1000vh | 830vh |
+| Textlage | links und rechts der Mittelbahn | unten über die ganze Breite |
+
+Beide 16 Sekunden, Keyframe alle 8 Bilder. Das Handy bekam anfangs gar keine
+Bewegung, weil es unter den Static-Hero fiel. Das war der auffälligste Mangel der
+ersten Fassung: Auf dem Gerät, auf dem die meisten Gäste die Seite öffnen, fehlte
+genau das, was die Seite ausmacht.
+
+Fünf Bänder, jedes mit einem eigenen Auftritt, der echot, was der Film in dem Moment tut.
 
 | Band | Bereich | Auftritt |
 |---|---|---|
@@ -77,18 +89,42 @@ verdecken. Das Bild hat hier das Layout korrigiert.
 
 ### Der Flick-Test, gemessen
 
-Radschritte von 120, 240 und 360 Pixeln, wie ein echter Leser scrollt.
+Radschritte von 120, 240 und 360 Pixeln, wie ein echter Leser scrollt. Gefordert sind
+fünf bis sechs Flicks bei normalem Tempo und kein überspringbares Band bei 360.
 
-| Band | 120px | 240px | 360px |
-|---|---|---|---|
-| 1 | 8 Flicks voll lesbar | 4 | 3 |
-| 2 | 10 | 5 | 3 |
-| 3 | 10 | 5 | 4 |
-| 4 | 10 | 5 | 4 |
-| 5 | 14 | 7 | 4 |
+| Band | quer, 120px | hoch, 120px |
+|---|---|---|
+| 1 | 8 | 6 |
+| 2 | 10 | 7 |
+| 3 | 10 | 7 |
+| 4 | 10 | 7 |
+| 5 | 14 | 10 |
 
-Gefordert sind fünf bis sechs Flicks bei normalem Tempo und kein überspringbares Band
-bei 360. Beides erfüllt.
+Im Hochformat stand die Strecke zuerst auf 640vh, und Band 1 blieb dort nur vier
+Flicks lesbar. Behoben wurde das mit mehr Strecke, 830vh, **nicht** mit kürzeren
+Rampen. Rampen zu stauchen löst ein zu kurzes Band nie, es macht den Auftritt nur
+hektisch.
+
+### Die Wärme am Anfang
+
+Der Einstieg war zu kalt. Gemessen an den Kanalmittelwerten lag Rot am ersten Bild
+sieben Punkte unter Blau, während schon zwei Sekunden später Rot neunzehn Punkte
+darüber liegt. Die Kälte saß also genau im ersten Eindruck und nirgends sonst.
+
+Korrigiert wird deshalb zeitabhängig, nicht global: Rot mal 1,14 plus 7, Blau mal
+0,91, und diese Korrektur läuft über 2,6 Sekunden linear auf null aus. Ab Sekunde
+drei ist das Bild messbar identisch mit dem Original, der Übergang ist unsichtbar.
+
+| Zeit | vorher (Rot minus Blau) | nachher |
+|---|---|---|
+| 0,2 s | −7,0 | +12,3 |
+| 1,0 s | −8,0 | +5,7 |
+| 3,0 s | +37,3 | +37,3 |
+| 14,0 s | +83,2 | +83,1 |
+
+Stärker wollte ich nicht: Bei doppelter Korrektur verliert die Fassade ihr Blau und
+der Himmel kippt ins Grünliche. Die Nacht soll Nacht bleiben, nur soll das warme
+Licht aus der Tür auf die Straße übergreifen statt dagegen anzukämpfen.
 
 ### Die Lesbarkeit, gemessen an der zusammengesetzten Seite
 
@@ -97,23 +133,39 @@ Schrift der hellste Pixel gesucht. Damit sind alle Scrim-Ebenen exakt so gemesse
 wie der Besucher sie sieht. Die Methode ist streng: mit der Schrift verschwindet auch
 ihr Schatten, der in Wahrheit noch hilft.
 
-| Band | schlimmster Pixel | Kontrast |
-|---|---|---|
-| 1 | rgb(118,109,99) | 4.21:1 |
-| 2 | rgb(118,113,107) | 4.01:1 |
-| 3 | rgb(122,113,104) | 3.96:1 |
-| 4 | rgb(101,91,66) | 5.56:1 |
-| 5 | rgb(108,81,56) | 6.06:1 |
+| Band | schlimmster Pixel | quer | hoch, schwächster Schirm |
+|---|---|---|---|
+| 1 | rgb(92,90,89) | 5.68:1 | |
+| 2 | rgb(95,90,94) | 5.59:1 | |
+| 3 | rgb(96,91,87) | 5.56:1 | |
+| 4 | rgb(84,75,58) | 7.12:1 | |
+| 5 | rgb(106,96,91) | 5.06:1 | 3.99:1 bei 375×667 |
 
-Boden 3.5:1. Alle bestehen.
+Boden 3.5:1. Alle bestehen, quer wie hoch, über 375×667, 375×812 und 430×932.
 
-**Was dabei gelernt wurde und hier festgehalten gehört:** Der erste Entwurf fiel mit
-1.0 bis 1.75 durch, und die naheliegende Antwort wäre gewesen, den Scrim dunkler zu
-machen. Nachgerechnet brauchte der schlimmste Pixel aber nur 0.52 Deckung, und der
-Verlauf hatte in der Spitze schon 0.66. Das Problem war nicht die Tiefe, sondern die
-Größe: Der Verlauf war zu klein und saß außermittig, ein Glanzlicht lag daneben und
-schlug durch die Schrift. Wer hier nur die Deckkraft hochdreht, tötet das Bild und
-löst nichts.
+Der Static-Hero, also der Zustand ohne Video, wurde eigens gemessen: 6.42:1 bis
+12.65:1 über sechs Formate von 375×667 bis 1024×1366. Er saß anfangs oben im Bild und
+lag damit auf einem Tablet mitten im Türlicht, gemessene 1.22:1. Jetzt steht er auf
+allen Schirmen unten, wo das nasse Pflaster die ruhige Zone bildet, und hat einen
+eigenen Scrim, der am Textkasten hängt statt an der Bildhöhe.
+
+**Zwei Dinge, die hier gelernt wurden und festgehalten gehören.**
+
+Erstens: Der erste Entwurf fiel mit 1.0 bis 1.75 durch, und die naheliegende Antwort
+wäre gewesen, den Scrim dunkler zu machen. Nachgerechnet brauchte der schlimmste
+Pixel aber nur 0.52 Deckung, und der Verlauf hatte in der Spitze schon 0.66. Das
+Problem war nicht die Tiefe, sondern die Größe. Wer hier nur die Deckkraft hochdreht,
+tötet das Bild und löst nichts.
+
+Zweitens, und das war der eigentliche Fehler: Die Scrims hingen als Ellipse am
+Textkasten. **Eine begrenzte Form hat immer eine Kante**, und die las sich als
+dunkler Kasten hinter der Schrift, besonders am Schluss. Egal wie weich der Verlauf
+ist, seine Grenze bleibt sichtbar, sobald sie im Bild liegt.
+
+Die Lösung ist nicht weicher, sondern anders: Die Scrims liegen jetzt als eigene
+Ebenen auf der Bühne und laufen **vom Bildrand nach innen** aus. Ein Verlauf, dessen
+dunkles Ende außerhalb des Bildes liegt, kann keine Kante zeigen. Die Mittelbahn
+bleibt trotzdem hell, weil die seitlichen Verläufe vorher auslaufen.
 
 ## Bewegung
 
@@ -125,6 +177,15 @@ löst nichts.
 - Alles pausiert bei verstecktem Tab, und zwar über eine Regel, die jedes Element und
   jedes Pseudoelement direkt trifft, weil `animation-play-state` nicht vererbt.
 - `prefers-reduced-motion` wird in beide Richtungen befolgt.
+
+## Der Ruf, also der Call to Action
+
+Kein Knopf. Ein gefülltes Rechteck mit Versalien darauf ist die Form, die auf jeder
+beliebigen Seite steht, und genau daran erkennt man Baukasten. In einer Welt aus
+Stein, Messing und einer Garamond wird die Nummer gesetzt: eine kleine Messingzeile
+darüber, die Nummer in der Display-Schrift, ein Haarstrich aus Messing darunter, der
+beim Zeigen wächst. Die Fläche ist mit 69 Pixeln Höhe von selbst weit über dem
+Mindestziel für grobe Zeiger.
 
 ## Der Mitmach-Moment
 

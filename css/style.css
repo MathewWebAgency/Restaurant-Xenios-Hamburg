@@ -215,32 +215,32 @@ body.kopf-hell .kopf::before { opacity: 0; }
 /* 2. Der Band-Scrim, zweiseitig.
    Die Mittelbahn gehoert dem Weg zum Tisch und bleibt hell. Deshalb sitzt
    die Ellipse auf der jeweiligen Spalte, nicht quer ueber die Mitte. */
-/* Die Groesse ist hier wichtiger als die Tiefe.
-   Gemessen hat der schlimmste Pixel 0.52 Deckung gebraucht, der Verlauf
-   hatte in der Spitze schon 0.66. Er war nur zu klein und sass ausserhalb
-   der Mitte, deshalb lag ein Glanzlicht neben ihm und schlug durch die
-   Schrift. Der Verlauf deckt jetzt die ganze Textflaeche und laeuft erst
-   am Rand des Kastens aus. Die Mittelbahn bleibt trotzdem hell, weil jedes
-   Band nur auf seiner eigenen Spalte sitzt. */
-.band::before {
-  content: ""; position: absolute; inset: -100% -34%;
-  pointer-events: none; z-index: -1;
-  opacity: calc(.25 + .75 * var(--k, 1));
+/* Die Scrims der Baender liegen als eigene Ebenen auf der Buehne und
+   laufen vom Bildrand nach innen aus.
+
+   Vorher hingen sie als Ellipse am Textkasten. Eine begrenzte Ellipse hat
+   aber immer eine Kante, und die las sich als dunkler Kasten hinter der
+   Schrift. Ein Verlauf, der am Bildrand anfaengt, kann keine Kante zeigen,
+   weil sein dunkles Ende ausserhalb liegt. Die Mittelbahn bleibt hell,
+   weil die seitlichen Verlaeufe vorher auslaufen. */
+.bandscrim {
+  position: absolute; inset: 0; z-index: 3;
+  pointer-events: none; opacity: 0;
 }
-.band--links::before {
-  background: radial-gradient(ellipse 62% 46% at 46% 50%,
-              rgba(5,8,14,.80) 0%, rgba(5,8,14,.78) 50%,
-              rgba(5,8,14,.46) 72%, rgba(5,8,14,0) 100%);
+.bandscrim--links {
+  background: linear-gradient(to right,
+    rgba(6,9,15,.88) 0%, rgba(6,9,15,.85) 24%, rgba(6,9,15,.68) 38%,
+    rgba(6,9,15,.30) 52%, rgba(6,9,15,0) 66%);
 }
-.band--rechts::before {
-  background: radial-gradient(ellipse 62% 46% at 54% 50%,
-              rgba(5,8,14,.80) 0%, rgba(5,8,14,.78) 50%,
-              rgba(5,8,14,.46) 72%, rgba(5,8,14,0) 100%);
+.bandscrim--rechts {
+  background: linear-gradient(to left,
+    rgba(6,9,15,.88) 0%, rgba(6,9,15,.85) 24%, rgba(6,9,15,.68) 38%,
+    rgba(6,9,15,.30) 52%, rgba(6,9,15,0) 66%);
 }
-.band--settle::before {
-  background: radial-gradient(ellipse 58% 50% at 50% 48%,
-              rgba(5,8,14,.80) 0%, rgba(5,8,14,.78) 50%,
-              rgba(5,8,14,.46) 72%, rgba(5,8,14,0) 100%);
+.bandscrim--settle {
+  background: linear-gradient(to bottom,
+    rgba(6,9,15,.90) 0%, rgba(6,9,15,.85) 24%, rgba(6,9,15,.62) 42%,
+    rgba(6,9,15,.24) 58%, rgba(6,9,15,0) 72%);
 }
 
 .band--links  { left: var(--rand); top: 50%; transform: translateY(-50%); }
@@ -379,31 +379,67 @@ body.kopf-hell .kopf::before { opacity: 0; }
 .ruhehero__sub { margin: var(--r-3) 0 var(--r-4); color: var(--kalk-weich); }
 .ruhehero .knopf { text-shadow: none; }
 
-@media (max-width: 720px),
-       (orientation: portrait) and (max-width: 1024px),
-       (orientation: portrait) and (pointer: coarse),
-       (orientation: landscape) and (pointer: coarse) and (max-height: 560px),
-       (prefers-reduced-motion: reduce) {
+/* ==========================================================================
+   Hochformat MIT Fahrt.
+   Handys bekommen die Kamerafahrt jetzt auch, nur als eigene, schmalere
+   und leichtere Datei. Der Text steht dabei unten, weil dort im Bild die
+   ruhige Zone liegt, und er steht ueber die ganze Breite statt seitlich.
+   ========================================================================== */
+
+@media (orientation: portrait) and (max-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  /* Die Strecke ist kuerzer als quer, weil im Hochformat weniger Text je
+     Bildschirm steht. Bei 640vh blieb Band 1 aber nur vier normale Flicks
+     lesbar, gefordert sind fuenf bis sechs. Also mehr Strecke statt
+     kuerzerer Rampen: das Stauchen der Rampen loest so etwas nie. */
+  .hero { height: 830vh; }
+
+  .band--links, .band--rechts, .band--settle {
+    left: var(--rand); right: var(--rand);
+    top: auto; bottom: 13vh;
+    transform: none;
+    max-width: none;
+    text-align: left;
+  }
+  .band--rechts .band__klein { margin-left: 0; }
+  .band--settle .band__sub { margin-left: 0; margin-right: 0; }
+  .band__zeile { font-size: var(--s-2); }
+  .band__zeile--gross { font-size: var(--s-3); }
+  .band__klein, .band__sub { font-size: var(--s--1); }
+
+  /* Ein Verlauf von unten fuer alle drei Ebenen: im Hochformat steht der
+     Text immer unten, also kommt die Abdunklung immer von dort. */
+  .bandscrim--links, .bandscrim--rechts, .bandscrim--settle {
+    background: linear-gradient(to top,
+      rgba(6,9,15,.92) 0%, rgba(6,9,15,.88) 18%, rgba(6,9,15,.64) 36%,
+      rgba(6,9,15,.24) 54%, rgba(6,9,15,0) 70%);
+  }
+}
+
+/* ==========================================================================
+   Der Static-Hero.
+   Nur noch dort, wo Bewegung nicht gewuenscht ist oder wirklich kein Platz
+   dafuer bleibt. Frueher fiel jedes Handy hierunter, und dann war auf dem
+   Handy ueberhaupt keine Bewegung zu sehen.
+   Diese Abfragen stehen zeichengenau genauso in hero.js.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce),
+       (orientation: landscape) and (pointer: coarse) and (max-height: 560px) {
   .hero    { height: 100svh; }
-  .baender { display: none; }
+  .baender, .bandscrim { display: none; }
   .ring, .wink { display: none; }
   .ruhehero { display: block; }
   #film { display: none; }
 
-  /* Der Static-Hero bekommt ein eigenes, hochformatiges Bild.
-     Es haengt am Stylesheet und nicht am Skript, deshalb laedt es genau
-     dann, wenn diese Abfragen greifen, und auf dem Desktop nie. Ohne das
-     hier war der Hero auf dem Handy eine leere dunkle Flaeche, also genau
-     die Rueckfall-Entschuldigung, die es nicht sein darf. */
   .buehne {
     background:
       linear-gradient(to bottom,
-        rgba(13,20,28,.30) 0%, rgba(13,20,28,.10) 32%,
-        rgba(13,20,28,.74) 62%, rgba(13,20,28,.93) 100%),
+        rgba(13,20,28,.26) 0%, rgba(13,20,28,.08) 34%,
+        rgba(13,20,28,.48) 72%, rgba(13,20,28,.70) 100%),
       url('../assets/video/hero-hoch.jpg') center 38% / cover no-repeat,
       var(--nacht-tief);
   }
-  .scrim { display: none; }   /* der Verlauf oben macht seine Arbeit mit */
+  .scrim { display: none; }
 }
 
 /* Flache Fenster ohne Handy: Scrub bleibt, aber die kleinen Einblendungen
@@ -797,3 +833,60 @@ body.kopf-hell .weg { opacity: .55; }
 .fehler { min-height: 70svh; display: grid; place-items: center; text-align: center; padding: var(--rand); }
 .fehler h1 { font-size: var(--s-4); }
 .fehler p { margin-inline: auto; }
+
+/* ==========================================================================
+   Der Ruf. Der Call to Action im Hero.
+
+   Vorher war das ein gefuelltes Rechteck mit Versalien darauf, also genau
+   die Form, die auf jeder beliebigen Seite steht und nach Baukasten
+   aussieht. In einer Welt aus Stein, Messing und einer Garamond gehoert
+   die Nummer gesetzt und nicht in einen Chip: kleine Messingzeile darueber,
+   die Nummer in der Display-Schrift, ein Haarstrich aus Messing darunter.
+   Der Strich waechst beim Zeigen, das ist die ganze Bewegung.
+   ========================================================================== */
+
+.rufcta {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--kalk);
+  padding: .1em 0 .42em;
+  position: relative;
+}
+.rufcta__label {
+  display: block;
+  color: var(--messing-hell);
+  margin-bottom: .3em;
+}
+.rufcta__nummer {
+  display: block;
+  font-family: var(--display);
+  font-size: var(--s-3);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .005em;
+  font-variant-numeric: lining-nums tabular-nums;
+  transition: transform var(--t-ui) var(--ease-aus);
+}
+/* Der Strich sitzt auf einem Pseudoelement, damit nur seine Hoehe und
+   nicht das Layout animiert wird. */
+.rufcta::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 1px; background: var(--messing-hell);
+  transform-origin: left bottom;
+  transition: height var(--t-ui) var(--ease-aus),
+              background-color var(--t-ui) var(--ease-aus);
+}
+.rufcta:hover::after,
+.rufcta:focus-visible::after { height: 3px; background: var(--kalk); }
+.rufcta:hover .rufcta__nummer,
+.rufcta:focus-visible .rufcta__nummer { transform: translateY(-2px); }
+.rufcta:focus-visible { outline-offset: 6px; }
+
+/* Der Schatten der Baender wuerde die Nummer verschmieren. */
+.band .rufcta, .ruhehero .rufcta { text-shadow: var(--tschatten); }
+.band .rufcta__label, .ruhehero .rufcta__label { text-shadow: 0 1px 3px rgba(5,8,14,.9); }
+
+.ruhehero__cta { margin: var(--r-4) 0 0; }
+
+/* Auf groben Zeigern ist die Flaeche schon durch Zeile plus Nummer weit
+   ueber 44px hoch, es braucht keine Mindesthoehe, die das Layout kippt. */

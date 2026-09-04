@@ -19,6 +19,10 @@ function pruefe(name, bedingung, detail = '') {
 
 const c = await verbinden();
 await mkdir(AUS, { recursive: true });
+// Immer gegen den frischen Stand pruefen, nie gegen den Cache.
+await c.senden('Network.enable');
+await c.senden('Network.setCacheDisabled', { cacheDisabled: true });
+await c.senden('Network.clearBrowserCache');
 
 // Konsolenfehler mitschneiden, aber die 404 der noch fehlenden Videodatei
 // nicht als Fehler zaehlen: der Zustand ohne Video ist ein geplanter Zustand.
@@ -149,25 +153,55 @@ const heute = await c.js(`
 pruefe('Heutiger Tag markiert', !!heute, heute ? heute.tag : 'keine Zeile markiert');
 
 console.log('\n=== 7. Handy 375x812 mit echter Touch-Emulation ===');
+// Das Handy bekommt die Fahrt jetzt auch, aber als eigene schmale Datei.
+// Geprueft wird deshalb: laeuft sie, und wird die schwere Querformat-Datei
+// wirklich nicht mit geholt.
+const handyGeholt = [];
+c.auf(d => {
+  if (d.method === 'Network.requestWillBeSent') handyGeholt.push(d.params.request.url.split('/').pop());
+});
+await c.senden('Network.enable');
 await c.groesse(375, 812, true);
 await c.gehe(URL_BASIS);
 const handy = await c.js(`
+  for (let i=0;i<70;i++){
+    const b=document.getElementById('buehne');
+    if (b.classList.contains('film-bereit')||b.classList.contains('film-aus')) break;
+    await new Promise(r=>setTimeout(r,400));
+  }
+  const f = document.getElementById('film');
   return {
     ruheheroSichtbar: getComputedStyle(document.getElementById('ruhehero')).display !== 'none',
-    baenderAus: getComputedStyle(document.getElementById('baender')).display === 'none',
+    baenderDa: getComputedStyle(document.getElementById('baender')).display !== 'none',
     heroHoehe: document.getElementById('hero').offsetHeight,
     coarse: matchMedia('(pointer: coarse)').matches,
-    videoSrc: document.getElementById('film').getAttribute('src'),
-    posterBg: document.getElementById('poster').style.backgroundImage,
+    videoSrc: !!f.getAttribute('src'),
+    laufzeit: f.duration,
     quer: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
   };
 `);
 pruefe('Touch-Emulation greift wirklich', handy.coarse);
-pruefe('Static-Hero sichtbar, Baender aus', handy.ruheheroSichtbar && handy.baenderAus);
-pruefe('Hero ist auf dem Handy nur einen Bildschirm hoch', handy.heroHoehe < 1000,
-       `${handy.heroHoehe}px`);
-pruefe('Handy laedt weder Video noch Standbild',
-       !handy.videoSrc && !handy.posterBg, `src ${handy.videoSrc}, poster "${handy.posterBg}"`);
+pruefe('Handy bekommt die Fahrt statt eines Standbildes',
+       handy.baenderDa && !handy.ruheheroSichtbar && handy.videoSrc,
+       `Laufzeit ${handy.laufzeit}s`);
+pruefe('Handy holt die schmale Fassung, nicht die schwere',
+       handyGeholt.includes('hero-scrub-hoch.mp4') && !handyGeholt.includes('hero-scrub.mp4'),
+       handyGeholt.filter(u => /mp4/.test(u)).join(', ') || 'keine');
+
+const handyScrub = await c.js(`
+  const h=document.getElementById('hero'), f=document.getElementById('film');
+  const s=h.offsetHeight-innerHeight; const out=[];
+  for (const p of [0.2,0.6]) {
+    window.scrollTo({top:Math.round(s*p),behavior:'instant'});
+    await new Promise(r=>setTimeout(r,1000));
+    const echt = Math.min(1,Math.max(0,-h.getBoundingClientRect().top/s));
+    out.push(Math.abs(f.currentTime - echt*f.duration));
+  }
+  return out;
+`);
+pruefe('Scrubbing laeuft auch im Hochformat',
+       handyScrub.every(a => a < 0.35),
+       'groesste Abweichung ' + Math.max(...handyScrub).toFixed(2) + 's');
 pruefe('Kein Querschieben auf dem Handy', handy.quer);
 await c.bild(`${AUS}/03-handy.jpg`);
 
@@ -185,7 +219,7 @@ c.auf(d => {
 await c.senden('Network.enable');
 await c.gehe(URL_BASIS);
 await c.js(`await new Promise(r=>setTimeout(r,1500));`);
-const medienAnfragen = gefragt.filter(u => /hero-scrub\.mp4|hero-poster\.jpg/.test(u));
+const medienAnfragen = gefragt.filter(u => /hero-scrub.*\.mp4|hero-poster\.jpg|hero-hoch-poster\.jpg/.test(u));
 pruefe('Mit Reduced Motion geladen: keine Videoanfrage im Netz',
        medienAnfragen.length === 0,
        medienAnfragen.length ? medienAnfragen.join(' ') : 'null Anfragen');
@@ -200,6 +234,7 @@ const rm = await c.js(`
 `);
 pruefe('Reduced Motion zeigt den Static-Hero', rm.ruheheroSichtbar);
 pruefe('Reduced Motion setzt keine Videoquelle', !rm.videoSrc);
+pruefe('Reduced Motion zeigt weiterhin den Static-Hero statt der Fahrt', rm.ruheheroSichtbar);
 pruefe('Gedeck steht bei Reduced Motion fertig da', rm.gedeckFertig);
 pruefe('Alle Auftritte stehen im Endzustand', rm.auftritteAlleAn);
 await c.bild(`${AUS}/04-reduced-motion.jpg`);
