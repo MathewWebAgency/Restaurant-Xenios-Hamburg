@@ -82,9 +82,9 @@ mit Pause für den Halte-Moment.
 | | |
 |---|---|
 | Seite ohne Video, Desktop | 526 KB |
-| Seite ohne Video, Handy | 397 KB |
+| Seite ohne Video, Handy | 361 KB |
 | Video quer, strömt hinter dem Ladering nach | 8,17 MB |
-| Video hoch, fürs Handy | 2,65 MB |
+| Video hoch, fürs Handy | 2,26 MB |
 | DOM fertig | 54 ms |
 | Schriften, die eine deutsche Seite lädt | 187 KB Latein, 108 KB Griechisch dazu |
 | schwächster Textkontrast im Hero | 3,96:1 gegen den hellsten Pixel |

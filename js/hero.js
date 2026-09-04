@@ -20,7 +20,7 @@
                             : 'assets/video/hero-scrub.mp4';
   var POSTER_URL  = istHoch ? 'assets/video/hero-hoch-poster.jpg'
                             : 'assets/video/hero-poster.jpg';
-  var VIDEO_BYTES = istHoch ? 2777263 : 8563669;   // echte Groessen, Rueckfall wenn Content-Length fehlt
+  var VIDEO_BYTES = istHoch ? 2373118 : 8563669;   // echte Groessen, Rueckfall wenn Content-Length fehlt
 
   var hero    = document.getElementById('hero');
   var buehne  = document.getElementById('buehne');
@@ -389,7 +389,7 @@
     istHoch = hochMQ.matches;
     VIDEO_URL  = istHoch ? 'assets/video/hero-scrub-hoch.mp4' : 'assets/video/hero-scrub.mp4';
     POSTER_URL = istHoch ? 'assets/video/hero-hoch-poster.jpg' : 'assets/video/hero-poster.jpg';
-    VIDEO_BYTES = istHoch ? 2777263 : 8563669;
+    VIDEO_BYTES = istHoch ? 2373118 : 8563669;
     if (!scrubAn) return;
     gestartet = false;
     buehne.classList.remove('film-bereit', 'film-aus');

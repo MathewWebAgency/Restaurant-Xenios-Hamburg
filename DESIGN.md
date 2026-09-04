@@ -64,11 +64,12 @@ Zwei Fassungen derselben Reise, je nach Format.
 | | quer | hoch |
 |---|---|---|
 | Datei | `hero-scrub.mp4` | `hero-scrub-hoch.mp4` |
-| Größe | 1600×900, crf 26, 8,2 MB | 540×960, crf 28, 2,6 MB |
+| Größe | 1600×900, crf 26, 8,2 MB | 540×960, crf 28, 2,3 MB |
+| Laufzeit | 16 s | 13,8 s, steigt später ein |
 | Scrollstrecke | 1000vh | 830vh |
 | Textlage | links und rechts der Mittelbahn | unten über die ganze Breite |
 
-Beide 16 Sekunden, Keyframe alle 8 Bilder. Das Handy bekam anfangs gar keine
+Keyframe alle 8 Bilder in beiden. Das Handy bekam anfangs gar keine
 Bewegung, weil es unter den Static-Hero fiel. Das war der auffälligste Mangel der
 ersten Fassung: Auf dem Gerät, auf dem die meisten Gäste die Seite öffnen, fehlte
 genau das, was die Seite ausmacht.

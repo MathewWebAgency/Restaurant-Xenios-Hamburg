@@ -15,7 +15,7 @@ Gleiche Dateinamen, gleiche Seitenverhältnisse, fertig. Am Layout ändert sich 
 |---|---|---|---|
 | `assets/video/hero-scrub.mp4` | 16:9 | 1600 breit, 8,1 MB | die Kamerafahrt von der Straße an den Tisch |
 | `assets/video/hero-poster.jpg` | 16:9 | erstes Bild der Fahrt | die Straße mit der offenen Tür |
-| `assets/video/hero-scrub-hoch.mp4` | hoch, 540×960 | 2,6 MB | dieselbe Fahrt fürs Handy, eigener Ausschnitt |
+| `assets/video/hero-scrub-hoch.mp4` | hoch, 540×960 | 2,3 MB | dieselbe Fahrt fürs Handy, eigener Ausschnitt und späterer Einstieg |
 | `assets/video/hero-hoch-poster.jpg` | hoch, 540×960 | 70 KB | Standbild dazu |
 | `assets/video/hero-hoch.jpg` | hoch, 1000×1780 | 131 KB | Hintergrund des Static-Hero bei reduzierter Bewegung |
 | `assets/bilder/brot.jpg` | 4:5 | 1000 breit | Brotkorb auf weißer Decke |
@@ -90,10 +90,39 @@ geq=r='clip(r(X,Y)*(1+0.14*max(0,(2.6-T)/2.6))+7*max(0,(2.6-T)/2.6),0,255)'
    :b='clip(b(X,Y)*(1-0.09*max(0,(2.6-T)/2.6)),0,255)'
 ```
 
-**Der Ausschnitt fürs Hochformat.** `crop=608:1080:744:0` aus der 1920er Quelle, dann
-auf 540×960. Die Position 744 ist gewählt, nicht geraten: Bei 547 stand die Tür am
-Anfang zu weit rechts, bei 680 verlor der Schluss den Brotkorb. Der Wert dazwischen
-hält beides im Bild.
+**Der Ausschnitt fürs Hochformat, zweiter Anlauf.** Der erste Versuch nahm einen
+festen Streifen bei x=744 und war ein Kompromiss zwischen Anfang und Schluss. Am
+Anfang hat er verloren: Ein Hochformatstreifen erwischt immer einen der dunklen
+Pfeiler links und rechts der Tür, und so füllte kaltes Mauerwerk die halbe
+Handyansicht. Der erste Eindruck am Telefon war eine Wand statt eines Empfangs.
+
+Gemessen wurde dann, wo die Wärme wirklich sitzt: Der Schwerpunkt über alle Spalten
+lag bei 44 Prozent der Breite, die hellste Spalte, also die Tür selbst, bei 55 bis 65
+Prozent und wandernd. Der Ausschnitt saß auf dem Schwerpunkt statt auf der Tür.
+
+Die Fassung fürs Handy macht deshalb zwei Dinge anders:
+
+- **Sie steigt 2,2 Sekunden später ein.** Dort ist die Szene schon warm gemessen
+  (Rot minus Blau von −5 auf +21), man sieht aber noch nasses Pflaster und Straße,
+  die Ankunft geht also nicht verloren. Laufzeit 13,8 statt 16 Sekunden, was der
+  Seite egal ist, weil sie Scrollstrecke auf Fortschritt abbildet und nicht auf
+  Sekunden.
+- **Der Ausschnitt wandert.** Er startet bei x=880, also auf der warmen Öffnung
+  (dort 17 Prozent dunkle Fläche statt 27), und zieht über 2,2 Sekunden auf x=744,
+  wo der Raum und der Tisch mittig sitzen.
+
+```
+ffmpeg -ss 2.2 -i roh/seg1b-1080.mp4 -i roh/seg2b-1080.mp4 \
+  -filter_complex "[0:v][1:v]concat=n=2:v=1:a=0[c]; \
+    [c]crop=608:1080:'880-136*min(1,max(0,t/2.2))':0[cr]; \
+    [cr]scale=540:960[v]" -map "[v]" \
+  -c:v libx264 -crf 28 -preset slow -g 8 -keyint_min 8 \
+  -pix_fmt yuv420p -movflags +faststart -an assets/video/hero-scrub-hoch.mp4
+```
+
+Die Wärmekorrektur vom Anfang fehlt hier bewusst: Sie gilt der kalten ersten Sekunde,
+und genau die ist in dieser Fassung weggeschnitten. Sie noch einmal darüberzulegen
+würde das Bild orange kippen.
 
 ```bash
 # Die zwei Rohsegmente in EINEM Durchgang zusammenfuegen und genau einmal
